@@ -1,0 +1,88 @@
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%; /* Adjust the width as needed */
+  max-width: 600px; /* Set a maximum width if needed */
+}
+
+  
+  h2 {
+    text-align:center;
+    color:rgb(125, 15, 114);
+  }
+  
+  form {
+    margin-bottom: 20px;
+    color:rgb(141, 26, 118);
+  }
+  
+  label {
+    display:block;
+    margin-bottom: 5px;
+    size: 10px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .radio-buttons {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .radio-buttons input[type="radio"] {
+    margin-right: 5px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #850a71c7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #8a1992;
+  }
+ 
+  
+  .radio-buttons,
+  .checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .radio-buttons input[type="radio"],
+  .checkboxes input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; 
+    background-image: url('lala2.jpg');/* Change 'your-background-image.jpg' to the path of your background image */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

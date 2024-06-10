@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll</title>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+     body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('spotlight.jpg');
+      background-size: cover;
+      background-position: left 500px bottom 5px;
+      background-size: 50%; /* Adjust the background-position values */
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .filter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .filter label {
+      margin-right: 10px;
+      color:white;
+    }
+    .filter select {
+      padding: 5px;
+      border-radius: 10px;
+      color: rgb(245, 231, 246);
+      background-color:rgba(42, 20, 42, 0.753);
+
+    }
+    .filter button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #b1189f;
+      color: white;
+      cursor: pointer;
+    }
+    .swiper-container {
+      width: 80%;
+      height: 80%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .filter, .swiper-container {
+      order: 1;
+    }
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #d360b11e;
+      /* Center slide text vertically */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+    }
+    .profile-info {
+      color: rgba(255, 255, 255, 0.667);
+      margin-left: 20px;
+      text-align: left;
+      margin-top: 20px;
+    }
+    img {
+      max-width: 300px;
+      max-height: 300px;
+      border-radius: 10%;
+    }
+    .like-button {
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      font-size: 20px;
+      color: #aaa;
+      transition: color 0.3s;
+    }
+    .like-button:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="filter">
+    <label for="year">Year of Study:</label>
+    <select id="year">
+      <option value="">All</option>
+      <option value="1">First Year</option>
+      <option value="2">Second Year</option>
+      <option value="3">Third Year</option>
+      <option value="4">Fourth Year</option>
+      <option value="Not Specified">Not Specified</option>
+    </select>
+
+    <label for="gender">Gender:</label>
+    <select id="gender">
+      <option value="">All</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="interests">Interests:</label>
+    <select id="interests">
+      <option value="">All</option>
+      <option value="Travelling">Travelling</option>
+      <option value="Music">Music</option>
+      <option value="Movies">Movies</option>
+      <option value="Art">Art</option>
+      <option value="Technology">Technology</option>
+      <option value="Sports">Sports</option>
+      <option value="Literature">Literature</option>
+      <option value="Fashion">Fashion</option>
+      <option value="Not Specified">Not Specified</option>
+    </select>
+
+    <label for="hobbies">Hobbies:</label>
+    <select id="hobbies">
+      <option value="">All</option>
+      <option value="Reading">Reading</option>
+      <option value="Playing Musical Instrument">Playing Musical Instrument</option>
+      <option value="Cooking">Cooking</option>
+      <option value="Painting">Painting</option>
+      <option value="Coding">Coding</option>
+      <option value="Watching Youtube/Instagram">Watching Youtube/Instagram</option>
+      <option value="Gardening">Gardening</option>
+      <option value="Not Specified">Not Specified</option>
+    </select>
+
+    <button onclick="applyFilters()">Apply Filters</button>
+  </div>
+
+  <div class="swiper-container">
+    <div class="swiper-wrapper" id="profilesContainer">
+      <!-- Student profiles will be dynamically added here -->
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="students.json"></script>
+  <script>
+    var swiper;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('students.json')
+        .then(response => response.json())
+        .then(data => {
+          renderProfiles(data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+
+    function renderProfiles(data) {
+      const profilesContainer = document.getElementById('profilesContainer');
+      profilesContainer.innerHTML = '';
+
+      data.forEach(student => {
+        const profileElement = createProfileElement(student);
+        profilesContainer.appendChild(profileElement);
+      });
+
+      initializeSwiper();
+    }
+
+    function createProfileElement(student) {
+      const profileElement = document.createElement('div');
+      profileElement.classList.add('swiper-slide');
+
+      const photoElement = document.createElement('img');
+      photoElement.src = student.Photo;
+      photoElement.alt = student.Name;
+      profileElement.appendChild(photoElement);
+
+      const infoElement = document.createElement('div');
+      infoElement.classList.add('profile-info');
+      infoElement.innerHTML = `
+        <p><strong>Name:</strong> ${student.Name}</p>
+        <p><strong>Roll Number:</strong> ${student['IITB Roll Number']}</p>
+        <p><strong>Year of Study:</strong> ${student['Year of Study']}</p>
+        <p><strong>Age:</strong> ${student.Age}</p>
+        <p><strong>Gender:</strong> ${student.Gender}</p>
+        <p><strong>Interests:</strong> ${student.Interests.join(', ')}</p>
+        <p><strong>Hobbies:</strong> ${student.Hobbies.join(', ')}</p>
+        <p><strong>Email:</strong> ${student.Email}</p>
+        <button class="like-button" onclick="like(this)">
+          <i class="far fa-heart"></i>
+        </button>
+      `;
+      profileElement.appendChild(infoElement);
+
+      return profileElement;
+    }
+
+    function initializeSwiper() {
+      if (swiper) {
+        swiper.destroy();
+      }
+
+      swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+    }
+
+    function applyFilters() {
+      const year = document.getElementById('year').value;
+      const gender = document.getElementById('gender').value;
+      const interests = document.getElementById('interests').value;
+      const hobbies = document.getElementById('hobbies').value;
+
+      fetch('students.json')
+        .then(response => response.json())
+        .then(data => {
+          let filteredData = data;
+
+          if (year && year !== "Not Specified") {
+            filteredData = filteredData.filter(student => student['Year of Study'] === year);
+          }
+          if (gender) {
+            filteredData = filteredData.filter(student => student.Gender === gender);
+          }
+          if (interests && interests !== "Not Specified") {
+            filteredData = filteredData.filter(student => student.Interests.includes(interests));
+          }
+          if (hobbies && hobbies !== "Not Specified") {
+            filteredData = filteredData.filter(student => student.Hobbies.includes(hobbies));
+          }
+
+          filteredData = sortProfiles(filteredData, interests, hobbies, year, gender);
+
+          renderProfiles(filteredData);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function sortProfiles(data, interests, hobbies, year, gender) {
+      data.sort((a, b) => {
+        const commonA = countCommon(a, interests, hobbies);
+        const commonB = countCommon(b, interests, hobbies);
+
+        if (a['Year of Study'] !== b['Year of Study']) {
+          if (year === "Not Specified") {
+            if (a['Year of Study'] === "Not Specified") return 1;
+            if (b['Year of Study'] === "Not Specified") return -1;
+          } else {
+            if (a['Year of Study'] !== year && b['Year of Study'] === year) return 1;
+            if (a['Year of Study'] === year && b['Year of Study'] !== year) return -1;
+          }
+        }
+
+        if (a.Gender !== b.Gender) {
+          if (gender === "") {
+            if (a.Gender === "Female") return -1;
+            if (b.Gender === "Female") return 1;
+          } else {
+            if (a.Gender !== gender && b.Gender === gender) return 1;
+            if (a.Gender === gender && b.Gender !== gender) return -1;
+          }
+        }
+
+        return commonB - commonA;
+      });
+
+      return data;
+    }
+
+    function countCommon(student, interests, hobbies) {
+      const commonInterests = student.Interests.filter(interest => interests.includes(interest)).length;
+      const commonHobbies = student.Hobbies.filter(hobby => hobbies.includes(hobby)).length;
+      return commonInterests + commonHobbies;
+    }
+
+    function like(button) {
+      button.innerHTML = '<i class="fas fa-heart" style="color: red;"></i>';
+    }
+
+  </script>
+</body>
+</html>

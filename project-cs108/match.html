@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #backgroundVideo {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #matchDetails {
+      margin-top: 20px;
+    }
+
+    .exploding-photo {
+      animation: explode 0.5s ease;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <video autoplay loop muted id="backgroundVideo">
+    <source src="your-video.mp4" type="video/mp4">
+  </video>
+  <div class="container">
+    <h2>Match Details</h2>
+    <div id="matchDetails">
+      <!-- Match details will be displayed here -->
+    </div>
+    <button onclick="sendEmail()">Contact</button>
+    <button onclick="logout()">Wanna Try Again!</button>
+  </div>
+
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <script>
+    function logout() {
+      // Redirect to login.html
+      window.location.href = "dating.html";
+    }
+
+    
+    function sendEmail() {
+      const rightMatch = JSON.parse(sessionStorage.getItem('rightMatch'));
+      if (rightMatch) {
+        window.location.href = `mailto:${rightMatch.Email}`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const rightMatch = JSON.parse(sessionStorage.getItem('rightMatch'));
+      const matchDetailsDiv = document.getElementById('matchDetails');
+      
+      if (rightMatch) {
+        const matchDetails = `
+          <p><strong>Name:</strong> ${rightMatch.Name}</p>
+          <img src=${rightMatch.Photo} id="rightMatchPhoto" style="max-width: 200px; height: auto;">
+          <p><strong>Roll Number:</strong> ${rightMatch["IITB Roll Number"]}</p>
+          <p><strong>Year of Study:</strong> ${rightMatch["Year of Study"]}</p>
+          <p><strong>Age:</strong> ${rightMatch.Age}</p>
+          <p><strong>Gender:</strong> ${rightMatch.Gender}</p>
+          <p><strong>Email:</strong> ${rightMatch.Email}</p>
+          <p><strong>Interests:</strong> ${rightMatch.Interests.join(', ')}</p> 
+          <p><strong>Hobbies:</strong> ${rightMatch.Hobbies.join(', ')}</p>
+        `;
+        matchDetailsDiv.innerHTML = matchDetails;
+        const photo = document.getElementById('rightMatchPhoto');
+        photo.classList.add('exploding-photo');
+      } else {
+        matchDetailsDiv.innerHTML = '<p>No right match found!</p>';
+      }
+    });
+  </script>
+</body>
+</html>

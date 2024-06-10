@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Details</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Personal Details</h2>
+    <form id="detailsForm" onsubmit="return findMatch()">
+      <label for="rollNumber">IITB Roll Number</label>
+      <input type="text" id="rollNumber" name="rollNumber" required oninput="playSound()">
+
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="yearOfStudy">Year of Study</label>
+      <select id="yearOfStudy" name="yearOfStudy" required>
+        <option value="First">First</option>
+        <option value="Second">Second</option>
+        <option value="Third">Third</option>
+        <option value="Fourth">Fourth</option>
+      </select>
+
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" required>
+
+      <label>Gender</label>
+      <div class="radio-buttons">
+        <input type="radio" id="male" name="gender" value="Male">
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="Female">
+        <label for="female">Female</label>
+        <input type="radio" id="other" name="gender" value="Other">
+        <label for="other">Other</label>
+      </div>
+
+      <label for="interests">Interests</label>
+      <div class="checkboxes">
+        <input type="checkbox" id="sports" name="interests[]" value="Sports">
+        <label for="sports">Sports</label>
+        <input type="checkbox" id="music" name="interests[]" value="Music">
+        <label for="music">Music</label>
+        <input type="checkbox" id="reading" name="interests[]" value="Reading">
+        <label for="reading">Reading</label>
+        <input type="checkbox" id="traveling" name="interests[]" value="traveling">
+        <label for="traveling">Traveling</label>
+        <input type="checkbox" id="movies" name="interests[]" value="movies">
+        <label for="movies">movies</label>
+        <input type="checkbox" id="Art" name="interests[]" value="Art">
+        <label for="Art">Art</label>
+        <input type="checkbox" id="technology" name="interests[]" value="technology">
+        <label for="technology">Technology</label>
+        <input type="checkbox" id="literature" name="interests[]" value="literature">
+        <label for="literature">literature</label>
+        <input type="checkbox" id="fashion" name="interests[]" value="fashion">
+        <label for="fashion">Fashion</label>
+      </div>
+
+      <label for="hobbies">Hobbies</label>
+      <div class="checkboxes">
+        <input type="checkbox" id="cooking" name="hobbies[]" value="Cooking">
+        <label for="cooking">Cooking</label>
+        <input type="checkbox" id="gardening" name="hobbies[]" value="Gardening">
+        <label for="gardening">Gardening</label>
+        <input type="checkbox" id="painting" name="hobbies[]" value="Painting">
+        <label for="painting">Painting</label>
+        <input type="checkbox" id="photography" name="hobbies[]" value="Photography">
+        <label for="photography">Photography</label>
+        <input type="checkbox" id="reading" name="hobbies[]" value="Reading">
+        <label for="reading">Reading</label>
+        <input type="checkbox" id="playingMusicalInstruments" name="hobbies[]" value="Playing musical instruments">
+        <label for="playingMusicalInstruments">Playing Musical Instruments</label>
+        <input type="checkbox" id="coding" name="hobbies[]" value="Coding">
+        <label for="coding">Coding</label>
+        <input type="checkbox" id="watchingYoutubeInstagram" name="hobbies[]" value="Watching YouTube/Instagram">
+        <label for="watchingYoutubeInstagram">Watching YouTube/Instagram</label>
+      </div>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <input type="submit" value="Find your perfect companion!">
+    </form>
+    <button onclick="logout()">Logout</button>
+    <button onclick="swipe_or()">Spotlight search :) </button>
+  </div>
+  <audio id="successSound" src="my_song.mp3" preload="auto"></audio>
+  <script>
+
+function playSound() {
+      var audio = document.getElementById("successSound");
+      audio.play();
+    }
+
+    function logout() {
+      // Redirect to login.html
+      window.location.href = "login.html";
+    }
+
+    function swipe_or() {
+      // Redirect to login.html
+      window.location.href = "swipe.html";
+    }
+
+    function findMatch() {
+      const formData = {
+        rollNumber: document.getElementById('rollNumber').value,
+        name: document.getElementById('name').value,
+        yearOfStudy: document.getElementById('yearOfStudy').value,
+        age: document.getElementById('age').value,
+        gender: document.querySelector('input[name="gender"]:checked').value,
+        interests: [...document.querySelectorAll('input[name="interests[]"]:checked')].map(interest => interest.value),
+        hobbies: [...document.querySelectorAll('input[name="hobbies[]"]:checked')].map(hobby => hobby.value),
+        email: document.getElementById('email').value
+      };
+      
+      fetch('students.json')
+        .then(response => response.json())
+        .then(students => {
+          if (students) {
+            const oppositeGender = students.filter(student => student.Gender !== formData.gender && student.name !== formData.name);
+            let maxMatches = 0;
+            let rightMatch = null;
+
+            oppositeGender.forEach(student => {
+              const interestsMatches = student.Interests.filter(interest => formData.interests.includes(interest)).length;
+              const hobbiesMatches = student.Hobbies.filter(hobby => formData.hobbies.includes(hobby)).length;
+              const totalMatches = interestsMatches + hobbiesMatches;
+
+              if (totalMatches > maxMatches) {
+                maxMatches = totalMatches;
+                rightMatch = student;
+              }
+            });
+
+            if (rightMatch) {
+              sessionStorage.setItem('rightMatch', JSON.stringify(rightMatch));
+              window.location.href = 'match.html';
+            } else {
+              alert('Sorry, no right match found!');
+            }
+          } else {
+            alert('Error fetching data. Please try again later.');
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+      return false;
+    }
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url(pic.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  h2 {
+      color: rgb(158, 69, 136);
+      font-size: 40px;
+      font-family:cursive;
+      margin-bottom: 100px;
+      margin-left:800px ;
+       /* Change color of the heading */
+    }
+
+    form {
+     /* Change background color of the form */
+      padding: 20px;
+      border-radius: 10px;
+      margin-top:350px;
+      margin-right: 200px;
+      
+  /* Add shadow effect to the form */
+    }
+
+    label {
+      color: rgb(239, 248, 242);
+      font-size: larger; /* Change color of labels */
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+      background-color: rgb(224, 215, 229);
+    }
+
+    input[type="submit"] {
+      background-color:rgb(151, 43, 159); /* Change background color of submit button */
+      color: white; /* Change text color of submit button */
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      margin-top: 10px;
+      ;
+    }
+
+    .forgot-password a {
+      color: #8c8dbd; /* Change the color to blue */
+      text-decoration: none; /* Remove underline */
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline; /* Add underline on hover */
+    }
+  </style>
+</head>
+<body>
+  <h2>Wanna Date?</h2>
+  <form id="loginForm" onsubmit="return validateForm()">
+    <label for="username" >Username</label>
+    <input type="text" id="username" name="username" required oninput="playSound()">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+    <input type="submit" value="Login">
+    <div class="forgot-password">
+      <a href="forgot.html">Forgot Password?</a>
+    </div>
+   
+  </form>
+  
+  <audio id="successSound" src="my_song.mp3" preload="auto"></audio>
+
+  <script>
+    function playSound() {
+      var audio = document.getElementById("successSound");
+      audio.play();
+    }
+
+
+    function validateForm() {
+      // Get input values
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+
+      // Fetch users from login.json
+      fetch('login.json')
+        .then(response => response.json())
+        .then(data => {
+          const user = data.find(user => user.username === username && user.password === password);
+          if (user) {
+            window.location.href = "dating.html";
+          } else {
+            alert('Invalid username or password. Please try again.');
+          }
+        })
+        .catch(error => console.error('Error fetching users:', error));
+
+      // Prevent default form submission
+      return false;
+    }
+  </script>
+</body>
+</html>
